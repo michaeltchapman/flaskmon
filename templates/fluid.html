@@ -67,23 +67,14 @@
     </div>
 
     <div class="container-fluid">
-      <h1>Services</h1>
+      <h1>Nodes</h1>
       <div class="span12">
         <div class="row-fluid">
-        {% for service in result %}
-          <div class="span2">
-            <h2>{{ service }}</h2>
-            {% for host in result[service] %}
-            <a href="#" class="btn btn-success" rel="popover" title="{{ host[0] }}" data-content="{% for stat in host[1] %}{{ stat }} : {{ host[1][stat] }}<br>{% endfor %}">{{ host[0] }}</a>
-            {% endfor %}
-          </div><!--/row-->
+        {% for node in nodes %}
+          <a href="#" class="btn btn-success" rel="popover" title="{{ node }}" data-content="{% for stat in nodes[node] %}{{ stat }} : {{ nodes[node][stat] }}<br>{% endfor %}">{{ node }}</a>
         {% endfor %}  
         </div><!--/span-->
       </div><!--/row-->
-
-    </div><!--/.fluid-container-->
-    <div class="container-fluid">
-      <h1>Load</h1>
     </div><!--/.fluid-container-->
 
     <footer>
