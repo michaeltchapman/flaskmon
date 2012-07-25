@@ -8,7 +8,8 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/flaskmon.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -71,11 +72,17 @@
       <div class="span12">
         <div class="row-fluid">
         {% for node in nodes %}
-          <a href="#" class="btn btn-success" rel="popover" title="{{ node }}" data-content="{% for stat in nodes[node] %}{{ stat }} : {{ nodes[node][stat] }}<br>{% endfor %}">{{ node }}</a>
+          <a href="#" class="btn btn-success" rel="popover" title="{{ node }}" data-content='{% for stat in nodes[node] %}{{ stat }}<ul class="verticalBarGraph">{% for entry in nodes[node][stat]%}<li class="p1" style="height:57px; left: 0px;">{{ entry }}</li>{% endfor %}{% endfor %}'>{{ node }}</a>
         {% endfor %}  
         </div><!--/span-->
       </div><!--/row-->
     </div><!--/.fluid-container-->
+
+<ul class="verticalBarGraph">               
+    <li class="p1" style="height: 57px; left: 0px;">57</li>
+    <li class="p1" style="height: 27px; left: 10px;">27</li>
+    <li class="p1" style="height: 17px; left: 20px;">17</li>
+</ul>
 
     <footer>
       <p>&copy; Company 2012</p>
@@ -85,20 +92,9 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../static/js/jquery.js"></script>
-    <script src="../static/js/bootstrap-transition.js"></script>
-    <script src="../static/js/bootstrap-alert.js"></script>
-    <script src="../static/js/bootstrap-modal.js"></script>
-    <script src="../static/js/bootstrap-dropdown.js"></script>
-    <script src="../static/js/bootstrap-scrollspy.js"></script>
-    <script src="../static/js/bootstrap-tab.js"></script>
-    <script src="../static/js/bootstrap-tooltip.js"></script>
-    <script src="../static/js/bootstrap-popover.js"></script>
-    <script src="../static/js/bootstrap-button.js"></script>
-    <script src="../static/js/bootstrap-collapse.js"></script>
-    <script src="../static/js/bootstrap-carousel.js"></script>
-    <script src="../static/js/bootstrap-typeahead.js"></script>
-    <script src="../static/js/application.js"></script>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/flaskmon.js"></script>
 
 
   </body>

@@ -41,7 +41,7 @@ def fluid():
         if row.host.encode("utf-8") not in nodes:
             print row.host.encode("utf-8")
             pass
-        nodes[row.host.encode("utf-8")][row.topic.encode("utf-8") + '-disabled'] = row.disabled
+        #nodes[row.host.encode("utf-8")][row.topic.encode("utf-8") + '-disabled'] = row.disabled
 
     # query sql server status
 #    r = session.query("Tuples Returned", "Tuples Fetched", "Transactions Committed", "Blocks Fetched", "Block Cache Hits").from_statement('select pg_stat_get_db_tuples_returned(1) as "Tuples Returned", pg_stat_get_db_tuples_fetched(1) as "Tuples Fetched", pg_stat_get_db_xact_commit(1) as "Transactions Committed", pg_stat_get_db_blocks_fetched(1) as "Blocks Fetched", pg_stat_get_db_blocks_hit(1) as "Block Cache Hits"').all()[0]

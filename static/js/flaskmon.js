@@ -13,3 +13,7 @@ $(function()
         )
     );        
 });
+
+/*var graphs = $('.verticalBarGraph');
+graphs.hide()*/
+
