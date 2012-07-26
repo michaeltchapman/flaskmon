@@ -1,8 +1,7 @@
 $(function()
 {
-    $("a[rel=popover]")
-        .popover();
-
+/*    $("a[rel=popover]")
+        .popover();*/
 
     $('.servbtn').width(
         Math.max.apply( 
@@ -11,7 +10,7 @@ $(function()
                 return $(this).outerWidth();
             }).get()
         )
-    );        
+    );
 });
 
 /*var graphs = $('.verticalBarGraph');
