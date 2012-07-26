@@ -19,6 +19,6 @@ Flask then pushes out a minimum state. have a single button for each node.
 Color by load, black for dead nodes. Order the nodes by health so we can easily anything that
 needs immediate attention.
 Use a section of the screen as an inspection panel. When a node is selected, grab the detailed metrics
-from the appropriate RRDS via an AJAX query and display them as bar graphs. prsent using CSS instead of images.
+from the appropriate RRDS via an AJAX query and display them as bar graphs. present using CSS instead of images.
 
 Maybe do some visualisation of the physical layout...use d3.js or similar.
