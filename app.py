@@ -56,14 +56,19 @@ def fluid():
     for node in nodes:
         metrics = listdir('/var/lib/ganglia/rrds/unspecified/' + node + '.' + nodes[node]['domain'])
         for metric in metrics:
-            nodes[node][metric.split('.')[0]] = fetch('/var/lib/ganglia/rrds/unspecified/'  
+            rawdata = fetch('/var/lib/ganglia/rrds/unspecified/'  
                             + node + '.' + nodes[node]['domain'] + '/' 
                             + metric, 'AVERAGE', '-r ' + str(res), 
                             '-s e-30m', '-e ' + str(t/res*res))[2]
+            data = list()                
+            for datapoint in rawdata:
+                if '.' in str(datapoint[0]):
+                    datapoint = str(datapoint[0]).split('.')[0] + "." + str(datapoint[0]).split('.')[1][:2]
+                    data.append(datapoint)
+            nodes[node][metric.split('.')[0]] = data
+
 
     return render_template('fluid.html', nodes=nodes)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
-
-
