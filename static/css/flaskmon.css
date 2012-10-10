@@ -1,13 +1,14 @@
 .verticalBarGraph {
     border-bottom: 1px solid #FFF;
-    height: 100px;
+    list-style-type: none;
+    height: 60px;
     margin: 0;
     padding: 0;
     position: relative;
     width: 40px;
     }
     
-.verticalBarGraph li {
+.verticalBarGraph a {
 /*    border: 1px solid #555;*/
     border-bottom: none;
     bottom: 0;
@@ -19,12 +20,31 @@
     width: 10px;
     }
 
+.metricdisplay {
+    margin-top: 100px;
+}
+
+h1 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    text-align : center;
+}
+
+.metrics {
+    list-style: none;
+}
+
+.metriclist {
+    display-style: none;    
+}
+
 /*.verticalBarGraph li:hover { font-weight:bold; }*/
-.verticalBarGraph li.p1 { background-color:#666666 }    
-.verticalBarGraph li.p2 { background-color:#888888 }    
-.verticalBarGraph li.p2 { background-color:#888888 }    
-.verticalBarGraph li:hover { background-color:#AAAAAA }
+.verticalBarGraph a.p1 { background-color:#666666 }    
+.verticalBarGraph a.p2 { background-color:#888888 }    
+.verticalBarGraph a.p2 { background-color:#888888 }    
+.verticalBarGraph a:hover { background-color:#AAAAAA }
 /*
 .metric {
 
 }*/
+

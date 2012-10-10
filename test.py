@@ -47,7 +47,6 @@ def test():
             for datapoint in rawdata:
                 if '.' in str(datapoint[0]):
                     datapoint = str(datapoint[0]).split('.')[0] + str(datapoint[0]).split('.')[1][:2]
-                print datapoint
             nodes[node][metric.split('.')[0]] = rawdata
             
 test()

@@ -2,14 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>DC Monitoring</title>
+    <title>Openstack Monitoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet"> 
+    <link href="../static/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="../static/css/flaskmon.css" rel="stylesheet">
+    <link href="../static/css/animbut.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
+
+    <script type=text/javascript>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -19,12 +27,6 @@
         padding: 9px 0;
       }
     </style>
-    <link href="../static/css/bootstrap-responsive.css" rel="stylesheet">
-
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="../static/ico/favicon.ico">
@@ -35,73 +37,46 @@
   </head>
 
   <body>
-
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">DC Monitoring</a>
-          <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-user"></i> Username
-              <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Profile</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Sign Out</a></li>
-            </ul>
-          </div>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-
+    <!-- list of nodes -->
     <div class="container-fluid">
       <h1>Nodes</h1>
       <div class="span12">
         <div class="row-fluid">
         {% for node in nodes %}
-            <div class="span4">
-                <a href="#" class="btn btn-success" rel="popover" title="{{ node }}">{{ node }}</a>
-                <ul>
+                <a href="#" class="nodebut nodebutton" rel="popover" data-content="test" title="{{ node }}" >{{ node }}</a>
+                <ul class="metriclist" style="display-style: none">
                 {% for metric in nodes[node] %}
-                <li>{{metric}} :</li>
-                    {% for datapoint in nodes[node][metric] %}
-                    <p>{{ datapoint }} </p>
-                    {% endfor %}
+                    {% if metric != 'domain' %}
+                        <li>{{metric}} :</li>
+                            <ul class="verticalBarGraph">
+                                {% for datapoint in nodes[node][metric] %}
+                                <li><a class="p1" style="height: {{ datapoint[0].split('.')[0] }}px; left: {{ datapoint[1] * 10 }}px;" href="#" rel="popover" data-content="{{ datapoint[2] }}"></a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}    
                 {% endfor %}
                 </ul>
-            </div><!--/span-->
         {% endfor %}  
         </div><!--/span-->
       </div><!--/row-->
+
+      <!-- METRIC DISPLAY PANEL -->
+      <div class="span12 metricdisplay">
+        <h1>Metrics</h1>
+        <ul class="metrics">
+        </ul>  
+      </div>
     </div><!--/.fluid-container-->
 
-<ul class="verticalBarGraph">               
-    <li class="p1" style="height: 57px; left: 0px;">57</li>
-    <li class="p1" style="height: 27px; left: 10px;">27</li>
-    <li class="p1" style="height: 17px; left: 20px;">17</li>
-</ul>
+    <!-- Node info display area -->
+    <div class="container-fluid">
+    </div><!--/.fluid-container-->
 
     <footer>
       <p>&copy; Company 2012</p>
     </footer>
 
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="../static/js/jquery.min.js"></script>
     <script src="../static/js/bootstrap.min.js"></script>
     <script src="../static/js/flaskmon.js"></script>

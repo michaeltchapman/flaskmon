@@ -1,9 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 #from sqlalchemy import *
 #from sqlalchemy.orm import sessionmaker
 from rrdtool import fetch
 import time
 from os import listdir
+
+graph_height = 50.0
 
 app = Flask(__name__)
 
@@ -15,11 +17,19 @@ app = Flask(__name__)
 #sqlservices = Table('services', metadata, autoload=True)
 #sqlinstances = Table('instances', metadata, autoload=True)
 
+# TODO split nodes by domain/cluster
+domains = dict()
+nodes = dict()
+
+domains["openstack"] = nodes
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/fluid')
 def fluid():
 
-    # list of nodes avabilable from ganglia
-    nodes = dict()
     nodelist = listdir('/var/lib/ganglia/rrds/unspecified')
 
     for node in nodelist:
@@ -60,14 +70,86 @@ def fluid():
                             + node + '.' + nodes[node]['domain'] + '/' 
                             + metric, 'AVERAGE', '-r ' + str(res), 
                             '-s e-30m', '-e ' + str(t/res*res))[2]
-            data = list()                
+            
+            # find maximum
+            m = 0.0
             for datapoint in rawdata:
-                if '.' in str(datapoint[0]):
-                    datapoint = str(datapoint[0]).split('.')[0] + "." + str(datapoint[0]).split('.')[1][:2]
-                    data.append(datapoint)
-            nodes[node][metric.split('.')[0]] = data
+                if isinstance(datapoint[0], float):
+                    if datapoint[0] > m:
+                        m = datapoint[0]
+           
+            if m == 0:
+                ratio = 1
+            else:    
+                ratio = graph_height/m
+
+            data = list()                
+            for i, datapoint in enumerate(rawdata):
+                if isinstance(datapoint[0], float) and i < 6:
+                    value = datapoint[0] * ratio
+                    point = value
+                    if '.' in str(value):
+                        point = str(value).split('.')[0] + "." + str(value).split('.')[1][:2] # round to 2 decimal places
+                    data.append([str(point), i, datapoint[0]]) # append the normalised value for display plus the actual value for diagnosis
+                #else:
+                    #print " testing"
+                    #data.append([0, str(i), 0])
+            if metric.split('.')[0] != "domain":
+                nodes[node][metric.split('.')[0]] = data
 
 
+    return render_template('fluid.html', nodes=nodes)
+
+@app.route('/get_metric')
+def get_metric():
+    nodename = request.args.get('node', 0, type=str)
+
+    # list of nodes avabilable from ganglia
+    domains["services"] = nodes
+
+    nodelist = listdir('/var/lib/ganglia/rrds/unspecified')
+
+    for node in nodelist:
+        if node != '__SummaryInfo__':
+            nodes[node.split('.')[0]] = dict()
+            nodes[node.split('.')[0]]['domain'] = node.split('.')[1]
+
+    # use rrdtool to get load of each server
+    res = 600 # 5 minutes
+    t = int(time.mktime(time.localtime(time.time())))
+
+    # need to move things out of 'unspecified" at some point...
+    for node in nodes:
+        metrics = listdir('/var/lib/ganglia/rrds/unspecified/' + node + '.' + nodes[node]['domain'])
+        for metric in metrics:
+            rawdata = fetch('/var/lib/ganglia/rrds/unspecified/'  
+                            + node + '.' + nodes[node]['domain'] + '/' 
+                            + metric, 'AVERAGE', '-r ' + str(res), 
+                            '-s e-30m', '-e ' + str(t/res*res))[2]
+            
+            # find maximum
+            m = 0.0
+            for datapoint in rawdata:
+                if isinstance(datapoint[0], float):
+                    if datapoint[0] > m:
+                        m = datapoint[0]
+
+            if m == 0:
+                ratio = 1
+            else:    
+                ratio = graph_height/m
+
+            data = list()                
+            for i, datapoint in enumerate(rawdata):
+                if isinstance(datapoint[0], float) and i < 6:
+                    value = datapoint[0] * ratio
+                    point = value
+                    if '.' in str(value):
+                        point = str(value).split('.')[0] + "." + str(value).split('.')[1][:2] # round to 2 decimal places
+                    data.append([str(point), i, datapoint[0]]) # append the normalised value for display plus the actual value for diagnosis
+
+            if metric.split('.')[0] != "domain":
+                nodes[node][metric.split('.')[0]] = data
     return render_template('fluid.html', nodes=nodes)
 
 if __name__ == '__main__':

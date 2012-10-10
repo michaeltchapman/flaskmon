@@ -1,0 +1,62 @@
+p.nodetitle {
+
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100px;
+}
+
+a.nodebut {
+
+/*    position:relative;*/
+    
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+
+    margin: 0 auto;
+    text-align: center;
+
+
+    display:inline-block;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+    width:100px;
+    height:100px;
+
+    border-radius: 5px;
+
+    border: 1px dotted rgba(0,0,0,0.7);
+
+    background-image: linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
+    background-image: -o-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
+    background-image: -moz-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
+    background-image: -webkit-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
+    background-image: -ms-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.37, rgb(59,128,32)),
+        color-stop(0.69, rgb(11,38,38))
+    );
+
+    -webkit-transition:0.2s ease;
+    -moz-transition:0.2s ease;
+    -ms-transition:0.2s ease;
+    -o-transition:0.2s ease;
+    transition:0.2s ease;
+}
+
+a.nodebut:hover {
+    
+    -webkit-transition-duration:0.5s;
+    -moz-transition-duration:0.5s;
+    -ms-transition-duration:0.5s;
+    -o-transition-duration:0.5s;
+    transition-duration:0.5s;
+}
+
+
+a.nodebut:hover {border: 1px dotted rgba(0,0,0,0.7);}
