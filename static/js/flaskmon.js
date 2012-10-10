@@ -20,26 +20,25 @@ $(function()
     });*/
 
     $('.nodebutton').click(function() {
-
+            var thisnode = $(this).text()
             $.getJSON($SCRIPT_ROOT + '/get_metric', {
-                node : $(this).text, 
+                node : $(this).text()
             }, function(data) {
-                $('div.metricdisplay ul').append(data.result);
+                for (var metric in data.metrics)
+                {
+
+//                    $('div.metricdisplay ul').append('<ul class="verticalBarGraph">');
+                    $('#metricdisplay').append('<ul class="verticalBarGraph" id="' + thisnode + metric + '" >');
+                    for (var i = 0; i < data.metrics[metric].length; i++)
+                    {
+                        //$('div.metricdisplay ul').append('<p>' + data.metrics[metric][i][0] + '</p>');
+                        $('#' + thisnode + metric).append('<li><a class="p1" style="height: ' + data.metrics[metric][i][0] + 'px; left: ' + i*10 + 'px;" href="#" rel="popover" data-content="' + data.metrics[metric][i][2] + '"></a></li>');
+                    }
+                    $('#metricdisplay').append('</ul>');
+                }
             });
 
-            /*$('div.metricdisplay ul').append($(this).next().children().size());
-            for(var j = 0; j < data.result.size(); j++)
-            {
-                $('div.metricdisplay ul').append('<ul class="verticalBarGraph">');
-                for(var i = 0; i < data.result[j].size(); i++)
-                {
-                    $('div.metricdisplay ul').append('<a class="p1" style="height: 50px; left: ' + i*10 + 'px;" href="#" rel="popover" data-content="' + data.result[j][i]'"></a>');
-                }
-                $('div.metricdisplay ul').append('</ul>');
-
-            }*/
-            var output = '<p>' + i + '</p>';
-            $('div.metricdisplay ul').append(output);
+            //$('div.metricdisplay ul').append('<a class="p1" style="height: 50px; left: ' + i*10 + 'px;" href="#" rel="popover" data-content="' + data.result[j][i]'"></a>');
     });
 
 });

@@ -43,34 +43,17 @@
       <div class="span12">
         <div class="row-fluid">
         {% for node in nodes %}
-                <a href="#" class="nodebut nodebutton" rel="popover" data-content="test" title="{{ node }}" >{{ node }}</a>
-                <ul class="metriclist" style="display-style: none">
-                {% for metric in nodes[node] %}
-                    {% if metric != 'domain' %}
-                        <li>{{metric}} :</li>
-                            <ul class="verticalBarGraph">
-                                {% for datapoint in nodes[node][metric] %}
-                                <li><a class="p1" style="height: {{ datapoint[0].split('.')[0] }}px; left: {{ datapoint[1] * 10 }}px;" href="#" rel="popover" data-content="{{ datapoint[2] }}"></a></li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}    
-                {% endfor %}
-                </ul>
+          <a href="#" class="nodebut nodebutton" rel="popover" data-content="test" title="{{ node }}" >{{ node }}</a>
         {% endfor %}  
         </div><!--/span-->
       </div><!--/row-->
 
       <!-- METRIC DISPLAY PANEL -->
-      <div class="span12 metricdisplay">
+      <div class="span12 metricdisplay", id="metricdisplay">
         <h1>Metrics</h1>
-        <ul class="metrics">
-        </ul>  
       </div>
     </div><!--/.fluid-container-->
 
-    <!-- Node info display area -->
-    <div class="container-fluid">
-    </div><!--/.fluid-container-->
 
     <footer>
       <p>&copy; Company 2012</p>
