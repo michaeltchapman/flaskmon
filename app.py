@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
-#from sqlalchemy import *
-#from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, Table, MetaData
+from sqlalchemy.orm import sessionmaker
 from rrdtool import fetch
 import time
 from os import listdir
@@ -10,12 +10,12 @@ graph_height = 50.0
 app = Flask(__name__)
 
 ### SqlAlchemy stuff for accessing Openstack State ###
-#db = create_engine('postgresql://nova:testing@os-sql.os/nova')
-#Session = sessionmaker(bind=db)
-#session = Session()
-#metadata = MetaData(db)
-#sqlservices = Table('services', metadata, autoload=True)
-#sqlinstances = Table('instances', metadata, autoload=True)
+db = create_engine('postgresql://nova:testing@os-sql.os/nova')
+Session = sessionmaker(bind=db)
+session = Session()
+metadata = MetaData(db)
+sqlservices = Table('services', metadata, autoload=True)
+sqlinstances = Table('instances', metadata, autoload=True)
 
 # TODO split nodes by domain/cluster
 domains = dict()
@@ -36,6 +36,8 @@ def fluid():
         if node != '__SummaryInfo__':
             nodes[node.split('.')[0]] = dict()
             nodes[node.split('.')[0]]['domain'] = node.split('.')[1]
+            nodes[node.split('.')[0]]['f'] = dict()
+            nodes[node.split('.')[0]]['s'] = dict()
 
     #### SERVICES ####
 
@@ -111,6 +113,8 @@ def get_metric():
         if n != '__SummaryInfo__':
             nodes[n.split('.')[0]] = dict()
             nodes[n.split('.')[0]]['domain'] = n.split('.')[1]
+            nodes[node.split('.')[0]]['f'] = dict()
+            nodes[node.split('.')[0]]['s'] = dict()
 
     # use rrdtool to get load of server
     res = 600 # 5 minutes
@@ -138,16 +142,25 @@ def get_metric():
 
         data = list()                
         for i, datapoint in enumerate(rawdata):
-            if isinstance(datapoint[0], float) and i < 6:
+            if isinstance(datapoint[0], float) and i < 6: # Maybe remove size limit...
                 value = datapoint[0] * ratio
                 point = value
                 if '.' in str(value):
                     point = str(value).split('.')[0]# + "." + str(value).split('.')[1][:2] # round to 2 decimal places
-                data.append([str(point), i, datapoint[0]]) # append the normalised value for display plus the actual value for diagnosis
+                data.append([str(point), datapoint[0]]) # append the normalised value for display plus the actual value for diagnosis
+            if isinstance(datapoint[0], str):
+                data.append(datapoint[0])
 
         # TODO Handle string metrics here
-        if metric.split('.')[0] != "domain":
-            nodes[node][metric.split('.')[0]] = data
+        if isinstance(rawdata[0][0], float):
+            nodes[node]['f'][metric.split('.')[0]] = data
+        if isinstance(rawdata[0][0], str):
+            nodes[node]['s'][metric.split('.')[0]] = data
+
+
+    instances = [ instance for instance in session.query(sqlinstances) if instance.deleted == False]
+    for instance in instances:
+        print instance.host
 
     return jsonify(metrics=nodes[node])            
 

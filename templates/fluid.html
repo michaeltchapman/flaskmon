@@ -39,18 +39,18 @@
   <body>
     <!-- list of nodes -->
     <div class="container-fluid">
-      <h1>Nodes</h1>
       <div class="span12">
-        <div class="row-fluid">
+      <h1>Nodes</h1>
+        <div class="nodebuttons">
         {% for node in nodes %}
-          <a href="#" class="nodebut nodebutton" rel="popover" data-content="test" title="{{ node }}" >{{ node }}</a>
+          <a href="#" class="nodebut" rel="popover" data-content="test" title="{{ node }}" >{{ node }}</a>
         {% endfor %}  
         </div><!--/span-->
       </div><!--/row-->
 
       <!-- METRIC DISPLAY PANEL -->
       <div class="span12 metricdisplay", id="metricdisplay">
-        <h1>Metrics</h1>
+        <h1>Float Metrics last 5 minutes</h1>
       </div>
     </div><!--/.fluid-container-->
 

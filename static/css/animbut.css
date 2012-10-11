@@ -6,27 +6,31 @@ p.nodetitle {
     width: 100px;
 }
 
+div.nodebuttons {
+    vertical-align: bottom;
+    position: relative;
+    margin: 20;
+    padding: 20;
+}
+
 a.nodebut {
-
-/*    position:relative;*/
-    
     font-family: 'Raleway', sans-serif;
-    font-weight: 700;
+    font-weight: 400;
+    color: #000000;
 
-    margin: 0 auto;
-    text-align: center;
+    position: relative;
+    vertical-align: bottom;
 
+    margin: 5px;
+    padding: 10px;
+    /*text-align: center;*/
 
     display:inline-block;
-    -webkit-box-sizing:border-box;
-    -moz-box-sizing:border-box;
-    box-sizing:border-box;
-    width:100px;
-    height:100px;
+    width:60px;
+    height:60px;
 
     border-radius: 5px;
-
-    border: 1px dotted rgba(0,0,0,0.7);
+    border: 1px solid rgba(0,0,0,0.7);
 
     background-image: linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
     background-image: -o-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
@@ -38,25 +42,9 @@ a.nodebut {
         linear,
         left bottom,
         left top,
-        color-stop(0.37, rgb(59,128,32)),
-        color-stop(0.69, rgb(11,38,38))
+        color-stop(0.20, rgb(59,128,32)),
+        color-stop(0.50, rgb(195,195,195))
     );
-
-    -webkit-transition:0.2s ease;
-    -moz-transition:0.2s ease;
-    -ms-transition:0.2s ease;
-    -o-transition:0.2s ease;
-    transition:0.2s ease;
 }
-
-a.nodebut:hover {
-    
-    -webkit-transition-duration:0.5s;
-    -moz-transition-duration:0.5s;
-    -ms-transition-duration:0.5s;
-    -o-transition-duration:0.5s;
-    transition-duration:0.5s;
-}
-
 
 a.nodebut:hover {border: 1px dotted rgba(0,0,0,0.7);}
