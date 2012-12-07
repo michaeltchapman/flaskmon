@@ -27,6 +27,12 @@ domains["openstack"] = nodes
 def index():
     return render_template('index.html')
 
+green = '#3B8020'
+yellow = '#bfbf00'
+orange = '#f07a13'
+red = '#bd3838'
+
+
 @app.route('/fluid')
 def fluid():
 
@@ -47,7 +53,7 @@ def fluid():
     #    if row.host.encode("utf-8") not in nodes:
     #        print row.host.encode("utf-8")
     #        pass
-        #nodes[row.host.encode("utf-8")][row.topic.encode("utf-8") + '-disabled'] = row.disabled
+    #    nodes[row.host.encode("utf-8")][s][row.topic.encode("utf-8") + '-disabled'] = row.disabled
 
     # query sql server status
     # do this from a local metric instead of here.
@@ -61,47 +67,63 @@ def fluid():
     #### LOAD ####
 
     # use rrdtool to get load of each server
-    res = 600 # 5 minutes
+    res = 60 # 1 minute
     t = int(time.mktime(time.localtime(time.time())))
 
     # need to move things out of 'unspecified" at some point...
+    # grab 10 minutes because fetch is a bit buggy
     for node in nodes:
         metrics = listdir('/var/lib/ganglia/rrds/unspecified/' + node + '.' + nodes[node]['domain'])
-        for metric in metrics:
-            rawdata = fetch('/var/lib/ganglia/rrds/unspecified/'  
+        load_raw = fetch('/var/lib/ganglia/rrds/unspecified/'  
                             + node + '.' + nodes[node]['domain'] + '/' 
-                            + metric, 'AVERAGE', '-r ' + str(res), 
-                            '-s e-30m', '-e ' + str(t/res*res))[2]
+                            + 'load_one.rrd', 'AVERAGE', '-r ' + str(res), 
+                            '-s e-10m', '-e ' + str(t/res*res))[2]
+
+        cpus_raw = fetch('/var/lib/ganglia/rrds/unspecified/'  
+                            + node + '.' + nodes[node]['domain'] + '/' 
+                            + 'cpu_num.rrd', 'AVERAGE', '-r ' + str(res), 
+                            '-s e-10m', '-e ' + str(t/res*res))[2]
+
+        # If we are in the middle of a given
+        # minute there will be a null value
+        # so check back a couple of times to see
+        # if we hit a real value, then mark the
+        # host as down if that doesn't work
+
+        load = load_raw[-2:-1][0][0]  
+        if load == None:
+            load = load_raw[-3:-2][0][0]  
+        if load == None:
+            load = load_raw[-4:-3][0][0]  
+        if load == None:
+            load = -1.0
+
+        cpus = cpus_raw[-2:-1][0][0]  
+        if cpus == None:
+            cpus = cpus_raw[-3:-2][0][0]  
+        if cpus == None:
+            cpus = cpus_raw[-4:-3][0][0]  
+        if cpus == None:
+            cpus = -1.0;
+
+        if load > 0:
+            load = load / cpus 
+
+        if (0 <= load < 0.25):
+            nodes[node.split('.')[0]]['s']['load'] = 'green'
+        if (0.25 < load < 0.5):
+            nodes[node.split('.')[0]]['s']['load'] = 'yellow'
+        if (0.5 <= load < 0.75):
+            nodes[node.split('.')[0]]['s']['load'] = 'orange'
+        if (load >= 0.75 <= 1.0):
+            nodes[node.split('.')[0]]['s']['load'] = 'red'
+        if (load < 0 ):
+            nodes[node.split('.')[0]]['s']['load'] = 'down'
+
             
-            # find maximum
-            m = 0.0
-            for datapoint in rawdata:
-                if isinstance(datapoint[0], float):
-                    if datapoint[0] > m:
-                        m = datapoint[0]
-           
-            if m == 0:
-                ratio = 1
-            else:    
-                ratio = graph_height/m
-
-            data = list()                
-            for i, datapoint in enumerate(rawdata):
-                if isinstance(datapoint[0], float) and i < 6:
-                    value = datapoint[0] * ratio
-                    point = value
-                    if '.' in str(value):
-                        point = str(value).split('.')[0] + "." + str(value).split('.')[1][:2] # round to 2 decimal places
-                    data.append([str(point), i, datapoint[0]]) # append the normalised value for display plus the actual value for diagnosis
-                #else:
-                    #print " testing"
-                    #data.append([0, str(i), 0])
-            if metric.split('.')[0] != "domain":
-                nodes[node][metric.split('.')[0]] = data
-
-
     return render_template('fluid.html', nodes=nodes)
 
+# ajax route for node metric div
 @app.route('/get_metric')
 def get_metric():
     node = request.args.get('node', 0, type=str)
@@ -167,4 +189,5 @@ def get_metric():
                 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0')
+    #app.run(host='172.22.1.205', debug=True)

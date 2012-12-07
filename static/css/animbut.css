@@ -13,11 +13,70 @@ div.nodebuttons {
     padding: 20;
 }
 
+a.nodebut.green {
+
+    background: rbg(101, 189, 56) ;
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.20, rgb(101, 189, 56)),
+        color-stop(0.50, rgb(195,195,195))
+    );
+
+}
+
+a.nodebut.down {
+    background: rgb(0,0,0);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.20, rgb(0,0,0)),
+        color-stop(0.50, rgb(195,195,195))
+    );
+}
+
+a.nodebut.yellow {
+    background: rgb(189, 162,56);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.20, rgb(189, 162,56)),
+        color-stop(0.50, rgb(195,195,195))
+    );
+}
+
+a.nodebut.orange {
+
+    background: rgb(189, 98, 56);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.20, rgb(189,98,56)),
+        color-stop(0.50, rgb(195,195,195))
+    );
+}
+
+a.nodebut.red {
+
+    background: rgb(189,56,56);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.20, rgb(189,56,56)),
+        color-stop(0.50, rgb(195,195,195))
+    );
+}
+
 a.nodebut {
     font-family: 'Raleway', sans-serif;
     font-weight: 400;
     color: #000000;
-
+    text-shadow: #000000 0px 0px 1px;
     position: relative;
     vertical-align: bottom;
 
@@ -32,12 +91,7 @@ a.nodebut {
     border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.7);
 
-    background-image: linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
-    background-image: -o-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
-    background-image: -moz-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
-    background-image: -webkit-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
-    background-image: -ms-linear-gradient(bottom, rgb(59,128,32) 37%, rgb(11,38,38) 69%);
-
+    background: rgb(59,128,32);
     background-image: -webkit-gradient(
         linear,
         left bottom,

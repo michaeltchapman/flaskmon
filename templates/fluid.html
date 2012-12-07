@@ -43,7 +43,7 @@
       <h1>Nodes</h1>
         <div class="nodebuttons">
         {% for node in nodes %}
-          <a href="#" class="nodebut" rel="popover" data-content="test" title="{{ node }}" >{{ node }}</a>
+          <a href="#" class="nodebut {{ nodes[node]['s']['load']}}" rel="popover"  data-content="test" title="{{ node }}" >{{ node }}</a>
         {% endfor %}  
         </div><!--/span-->
       </div><!--/row-->
@@ -56,7 +56,7 @@
 
 
     <footer>
-      <p>&copy; Company 2012</p>
+      <p>&copy; NCI 2012</p>
     </footer>
 
 
